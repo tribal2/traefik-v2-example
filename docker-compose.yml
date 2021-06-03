@@ -1,0 +1,28 @@
+version: '3'
+
+networks:
+  default:
+    name: traefik
+
+services:
+  traefik:
+    image: traefik:v2.4
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik-router.rule=Host(`traefik.example.com`)"
+      - "traefik.http.routers.traefik-router.entrypoints=websecure"
+      - "traefik.http.routers.traefik-router.tls.certresolver=letsencrypt-resolver"
+      - "traefik.http.routers.traefik-router.service=api@internal"
+      - "traefik.http.routers.traefik-router.middlewares=my-custom-auth-middleware@file"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./traefik.yml:/etc/traefik/traefik.yml:ro"
+      - "./dynamic-cfg:/dynamic-cfg:ro"
+      - "./letsencrypt:/letsencrypt"
+    # To access host's ports from Traefik container and test 'external' services (running outside traefik network)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

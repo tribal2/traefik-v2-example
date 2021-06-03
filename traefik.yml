@@ -1,0 +1,43 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: true
+
+log:
+  level: INFO
+
+accessLog: {}
+
+entryPoints:
+
+  web:
+    address: ':80'
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ':443'
+    http:
+      tls:
+        certResolver: letsencrypt-resolver
+
+certificatesresolvers:
+  letsencrypt-resolver:
+    acme:
+      httpChallenge:
+        entryPoint: web
+      email: rtribaldos@example.com
+      storage: /letsencrypt/acme.json
+
+api:
+  dashboard: true
+
+providers:
+  docker:
+    exposedbydefault: false
+
+  file:
+    directory: /dynamic-cfg
+    watch: true

@@ -1,0 +1,7 @@
+http:
+  middlewares:
+    my-custom-auth-middleware:
+      basicauth:
+        users:
+          # $ htpasswd -nb myUsername myPassword
+          - myUsername:$apr1$mgXe70vN$87Vv7anp79LjnLjpyAyDJ.

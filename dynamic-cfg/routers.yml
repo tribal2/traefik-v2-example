@@ -1,0 +1,12 @@
+http:
+  routers:
+
+    # Example router on traefik.example.com/test -> wrr1-svc
+    traefik-external-router:
+      rule: (Host(`traefik.example.com`) && Path(`/test`))
+      entrypoints: websecure
+      tls:
+        certresolver: letsencrypt-resolver
+      middlewares:
+        - my-custom-auth-middleware
+      service: wrr1-svc # Weighted round robin service defined in services.yml
